@@ -1,23 +1,26 @@
 sparkApp:
   name: test-spark-app
-  namespace: spark-tests
-  image: repo/spark-test:latest
-  imagePullPolicy: Always
-  mainClass: com.example.TestApp
-  mainApplicationFile: local:///opt/spark/test.jar
-  type: Scala
+  namespace: default
+  image: rajendar38/spark-helloworld-java:latest
+  imagePullPolicy: IfNotPresent
+  mainClass: com.example.HelloWorld
+  mainApplicationFile: local:///opt/spark/examples/jars/helloworld-java.jar
+  type: Java
   mode: cluster
+  sparkVersion: "3.4.0"
 
-  sparkConf:
-    spark.executor.instances: "2"
-    spark.driver.memory: "512m"
-    spark.executor.memory: "1g"
+  schedule: "@every 1m"        # only for ScheduledSparkApplication
+  concurrencyPolicy: Forbid    # only for ScheduledSparkApplication
 
-  volumes:
-    - name: test-volume
-      persistentVolumeClaim:
-        claimName: test-pvc
+  restartPolicy:
+    type: Never
 
-  volumeMounts:
-    - name: test-volume
-      mountPath: /mnt/test
+  driver:
+    cores: 1
+    memory: 512m
+    serviceAccount: spark-operator-spark
+
+  executor:
+    instances: "2"
+    cores: 1
+    memory: 512m

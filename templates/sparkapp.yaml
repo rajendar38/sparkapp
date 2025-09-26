@@ -18,14 +18,16 @@ spec:
 
   driver:
     cores: 1
+    serviceAccount: {{ .Values.sparkApp.driver.serviceAccount}}
     volumeMounts:
       {{- toYaml .Values.sparkApp.volumeMounts | nindent 6 }}
 
   executor:
-    cores: 1
-    instances: {{ index .Values.sparkApp.sparkConf "spark.executor.instances" | default "1" }}
+    cores: {{ .Values.sparkApp.executor.cores }}
+    instances: {{ .Values.sparkApp.executor.instances }}
     volumeMounts:
       {{- toYaml .Values.sparkApp.volumeMounts | nindent 6 }}
+
 
   volumes:
     {{- toYaml .Values.sparkApp.volumes | nindent 4 }}

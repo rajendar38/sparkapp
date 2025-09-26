@@ -20,6 +20,7 @@ spec:
 
   driver:
     cores: 1
+    serviceAccount: spark-operator-spark
     volumeMounts:
       - mountPath: /mnt/test
         name: test-volume
@@ -30,6 +31,7 @@ spec:
     volumeMounts:
       - mountPath: /mnt/test
         name: test-volume
+
 
   volumes:
     - name: test-volume
