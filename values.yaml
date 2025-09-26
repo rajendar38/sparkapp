@@ -1,0 +1,23 @@
+sparkApp:
+  name: test-spark-app
+  namespace: spark-tests
+  image: repo/spark-test:latest
+  imagePullPolicy: Always
+  mainClass: com.example.TestApp
+  mainApplicationFile: local:///opt/spark/test.jar
+  type: Scala
+  mode: cluster
+
+  sparkConf:
+    spark.executor.instances: "2"
+    spark.driver.memory: "512m"
+    spark.executor.memory: "1g"
+
+  volumes:
+    - name: test-volume
+      persistentVolumeClaim:
+        claimName: test-pvc
+
+  volumeMounts:
+    - name: test-volume
+      mountPath: /mnt/test

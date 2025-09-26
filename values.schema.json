@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "sparkApp": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "namespace": { "type": "string" },
+        "image": { "type": "string" },
+        "imagePullPolicy": {
+          "type": "string",
+          "enum": ["Always", "IfNotPresent", "Never"]
+        },
+        "mainClass": { "type": "string" },
+        "mainApplicationFile": { "type": "string" },
+        "type": { "type": "string" },
+        "mode": { "type": "string" },
+        "sparkConf": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "volumes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "persistentVolumeClaim": {
+                "type": "object",
+                "properties": {
+                  "claimName": { "type": "string" }
+                },
+                "required": ["claimName"]
+              }
+            },
+            "required": ["name"]
+          }
+        },
+        "volumeMounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "mountPath": { "type": "string" }
+            },
+            "required": ["name", "mountPath"]
+          }
+        }
+      },
+      "required": [
+        "name",
+        "namespace",
+        "image",
+        "mainClass",
+        "mainApplicationFile",
+        "type",
+        "mode"
+      ]
+    }
+  },
+  "required": ["sparkApp"]
+}

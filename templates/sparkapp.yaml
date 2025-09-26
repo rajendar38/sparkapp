@@ -1,0 +1,32 @@
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: {{ .Values.sparkApp.name }}
+  namespace: {{ .Values.sparkApp.namespace }}
+spec:
+  type: {{ .Values.sparkApp.type }}
+  mode: {{ .Values.sparkApp.mode }}
+  image: {{ .Values.sparkApp.image }}
+  imagePullPolicy: {{ .Values.sparkApp.imagePullPolicy }}
+  mainClass: {{ .Values.sparkApp.mainClass }}
+  mainApplicationFile: {{ .Values.sparkApp.mainApplicationFile }}
+
+  sparkConf:
+    {{- range $key, $value := .Values.sparkApp.sparkConf }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+
+  driver:
+    cores: 1
+    volumeMounts:
+      {{- toYaml .Values.sparkApp.volumeMounts | nindent 6 }}
+
+  executor:
+    cores: 1
+    instances: {{ index .Values.sparkApp.sparkConf "spark.executor.instances" | default "1" }}
+    volumeMounts:
+      {{- toYaml .Values.sparkApp.volumeMounts | nindent 6 }}
+
+  volumes:
+    {{- toYaml .Values.sparkApp.volumes | nindent 4 }}
+

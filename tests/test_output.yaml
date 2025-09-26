@@ -1,0 +1,37 @@
+---
+# Source: spark-app/templates/sparkapp.yaml
+apiVersion: sparkoperator.k8s.io/v1beta2
+kind: SparkApplication
+metadata:
+  name: test-spark-app
+  namespace: spark-tests
+spec:
+  type: Scala
+  mode: cluster
+  image: repo/spark-test:latest
+  imagePullPolicy: Always
+  mainClass: com.example.TestApp
+  mainApplicationFile: local:///opt/spark/test.jar
+
+  sparkConf:
+    spark.driver.memory: "512m"
+    spark.executor.instances: "2"
+    spark.executor.memory: "1g"
+
+  driver:
+    cores: 1
+    volumeMounts:
+      - mountPath: /mnt/test
+        name: test-volume
+
+  executor:
+    cores: 1
+    instances: 2
+    volumeMounts:
+      - mountPath: /mnt/test
+        name: test-volume
+
+  volumes:
+    - name: test-volume
+      persistentVolumeClaim:
+        claimName: test-pvc
